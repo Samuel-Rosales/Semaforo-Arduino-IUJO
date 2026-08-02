@@ -12,3 +12,19 @@ const int PEAT_EO_ROJO    = 7;
 const unsigned long T_VERDE    = 5000;
 const unsigned long T_AMARILLO = 3000;
 const unsigned long T_DESPEJE  = 1000;
+
+void setup() {
+    for (int pin = 2; pin <= 11; pin++) {
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, LOW);
+        }
+    digitalWrite(VEH_NS_ROJO, HIGH);
+    digitalWrite(PEAT_NS_ROJO, HIGH);
+    digitalWrite(VEH_EO_ROJO, HIGH);
+    digitalWrite(PEAT_EO_ROJO, HIGH);
+    delay(1000);
+}
+
+void loop() {
+
+}
