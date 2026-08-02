@@ -26,5 +26,41 @@ void setup() {
 }
 
 void loop() {
+    // FASE 1
+    digitalWrite(VEH_NS_ROJO, LOW);
+    digitalWrite(VEH_NS_VERDE, HIGH);
+    digitalWrite(PEAT_EO_ROJO, LOW);
+    digitalWrite(PEAT_EO_VERDE, HIGH);
+    delay(T_VERDE);
 
+    // FASE 2
+    digitalWrite(VEH_NS_VERDE, LOW);
+    digitalWrite(VEH_NS_AMARILLO, HIGH);
+    digitalWrite(PEAT_EO_VERDE, LOW);
+    digitalWrite(PEAT_EO_ROJO, HIGH);
+    delay(T_AMARILLO);
+
+    // FASE DESPEJE 1
+    digitalWrite(VEH_NS_AMARILLO, LOW);
+    digitalWrite(VEH_NS_ROJO, HIGH);
+    delay(T_DESPEJE);
+
+    // FASE 3
+    digitalWrite(VEH_EO_ROJO, LOW);
+    digitalWrite(VEH_EO_VERDE, HIGH);
+    digitalWrite(PEAT_NS_ROJO, LOW);
+    digitalWrite(PEAT_NS_VERDE, HIGH);
+    delay(T_VERDE);
+
+    // FASE 4
+    digitalWrite(VEH_EO_VERDE, LOW);
+    digitalWrite(VEH_EO_AMARILLO, HIGH);
+    digitalWrite(PEAT_NS_VERDE, LOW);
+    digitalWrite(PEAT_NS_ROJO, HIGH);
+    delay(T_AMARILLO);
+
+    // FASE DESPEJE 2
+    digitalWrite(VEH_EO_AMARILLO, LOW);
+    digitalWrite(VEH_EO_ROJO, HIGH);
+    delay(T_DESPEJE);
 }
