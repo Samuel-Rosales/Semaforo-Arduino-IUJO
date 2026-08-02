@@ -17,6 +17,10 @@ const unsigned long T_DESPEJE  = 1000;
 const int NS = 100, EO = 200;
 const int GRE = 300, RED = 301, YEL = 302;
 
+unsigned long tiempoAnterior = 0; 
+int faseActiva = 1;
+
+
 void setup() {
     for (int pin = 2; pin <= 11; pin++) {
     pinMode(pin, OUTPUT);
@@ -30,43 +34,76 @@ void setup() {
 }
 
 void loop() {
-    // FASE 1
-    digitalWrite(VEH_NS_ROJO, LOW);
-    digitalWrite(VEH_NS_VERDE, HIGH);
-    digitalWrite(PEAT_EO_ROJO, LOW);
-    digitalWrite(PEAT_EO_VERDE, HIGH);
-    delay(T_VERDE);
+  unsigned long tiempoActual = millis(); 
+  unsigned long tiempoTranscurrido = tiempoActual - tiempoAnterior;
+  unsigned long tiempoObjetivo = 0;
 
-    // FASE 2
-    digitalWrite(VEH_NS_VERDE, LOW);
-    digitalWrite(VEH_NS_AMARILLO, HIGH);
-    digitalWrite(PEAT_EO_VERDE, LOW);
-    digitalWrite(PEAT_EO_ROJO, HIGH);
-    delay(T_AMARILLO);
+  // MÁQUINA DE ESTADOS NO BLOQUEANTE
+  switch (faseActiva) {
+    case 1: 
+      VEH(GRE, NS);
+      Peat(true, EO);
+      tiempoObjetivo = T_VERDE;
 
-    // FASE DESPEJE 1
-    digitalWrite(VEH_NS_AMARILLO, LOW);
-    digitalWrite(VEH_NS_ROJO, HIGH);
-    delay(T_DESPEJE);
+      if (tiempoTranscurrido >= tiempoObjetivo) { 
+        faseActiva = 2; 
+        tiempoAnterior = tiempoActual; 
+      }
+      break;
 
-    // FASE 3
-    digitalWrite(VEH_EO_ROJO, LOW);
-    digitalWrite(VEH_EO_VERDE, HIGH);
-    digitalWrite(PEAT_NS_ROJO, LOW);
-    digitalWrite(PEAT_NS_VERDE, HIGH);
-    delay(T_VERDE);
+    case 2: 
+      VEH(YEL, NS);
+      Peat(false, EO);
+      tiempoObjetivo = T_AMARILLO; 
 
-    // FASE 4
-    digitalWrite(VEH_EO_VERDE, LOW);
-    digitalWrite(VEH_EO_AMARILLO, HIGH);
-    digitalWrite(PEAT_NS_VERDE, LOW);
-    digitalWrite(PEAT_NS_ROJO, HIGH);
-    delay(T_AMARILLO);
+      if (tiempoTranscurrido >= tiempoObjetivo) { 
+        faseActiva = 3; 
+        tiempoAnterior = tiempoActual; 
+      }
+      break;
 
-    // FASE DESPEJE 2
-    digitalWrite(VEH_EO_AMARILLO, LOW);
-    digitalWrite(VEH_EO_ROJO, HIGH);
-    delay(T_DESPEJE);
+    case 3: 
+      VEH(RED, NS);
+      tiempoObjetivo = T_DESPEJE;
+
+      if (tiempoTranscurrido >= tiempoObjetivo) { 
+        faseActiva = 4; 
+        tiempoAnterior = tiempoActual; 
+      }
+      break;
+
+    case 4: 
+      VEH(GRE, EO);
+      Peat(true, NS);
+      tiempoObjetivo = T_VERDE;
+
+      if (tiempoTranscurrido >= tiempoObjetivo) { 
+        faseActiva = 5; 
+        tiempoAnterior = tiempoActual; 
+      }
+      break;
+
+    case 5: 
+      VEH(YEL, EO);
+      Peat(false, NS); 
+      tiempoObjetivo = T_AMARILLO;
+
+      if (tiempoTranscurrido >= tiempoObjetivo) {
+        faseActiva = 6;
+        tiempoAnterior = tiempoActual;
+      }
+      break;
+
+    case 6: 
+      VEH(RED, EO); 
+      tiempoObjetivo = T_DESPEJE;
+
+      if (tiempoTranscurrido >= tiempoObjetivo) { 
+        faseActiva = 1; 
+        tiempoAnterior = tiempoActual; 
+      }
+      break;
+  }
 }
 
 
